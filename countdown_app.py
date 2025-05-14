@@ -1,40 +1,44 @@
 import streamlit as st
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
 
 # Set page config
-st.set_page_config(page_title="Countdown to 11 June 2025", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Countdown Timer", layout="centered")
 
-# Apply dark background and red text
+# Custom CSS for dark background and red text
 st.markdown("""
     <style>
-        body {
-            background-color: #121212;
+        .main {
+            background-color: #0e1117;
             color: #FF4B4B;
-        }
-        .stApp {
-            background-color: #121212;
         }
         .countdown {
             font-size: 48px;
             font-weight: bold;
+            text-align: center;
+            color: #FF4B4B;
+        }
+        h1 {
             color: #FF4B4B;
             text-align: center;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Target datetime
-target_time = datetime(2025, 6, 11, 23, 0, 0)  # 11 June 2025 11:00 PM
+# Page title
+st.markdown("<h1>⏳ Countdown to 11 June 2025 - 11:00 PM</h1>", unsafe_allow_html=True)
 
-st.title("🕒 Countdown to 11 June 2025 - 11:00 PM")
+# Placeholder for countdown
+countdown_placeholder = st.empty()
 
-placeholder = st.empty()
+# Target time
+target_time = datetime(2025, 6, 11, 23, 0, 0)
 
+# Use a loop with rerun via Streamlit reactivity
 while True:
     now = datetime.now()
     if now >= target_time:
-        placeholder.markdown('<div class="countdown">🎉 Time has arrived! 🎉</div>', unsafe_allow_html=True)
+        countdown_placeholder.markdown("<div class='countdown'>🎉 Time has arrived! 🎉</div>", unsafe_allow_html=True)
         break
 
     remaining = target_time - now
@@ -42,6 +46,8 @@ while True:
     hours, rem = divmod(remaining.seconds, 3600)
     minutes, seconds = divmod(rem, 60)
 
-    countdown_str = f"{days}d {hours}h {minutes}m {seconds}s"
-    placeholder.markdown(f'<div class="countdown">{countdown_str}</div>', unsafe_allow_html=True)
+    countdown_text = f"{days}d {hours}h {minutes}m {seconds}s"
+    countdown_placeholder.markdown(f"<div class='countdown'>{countdown_text}</div>", unsafe_allow_html=True)
+
     time.sleep(1)
+    st.experimental_rerun()
